@@ -1,6 +1,7 @@
 const expressAsyncHandler = require('express-async-handler');
 const userCredentials = require('../Models/userModels');
 const bcrypt = require('bcrypt');
+const generateToken = require('../config/generateToken');
 
 const registerUser = expressAsyncHandler(async(req, res) => {
     const {userName, email, password} = req.body;
@@ -35,4 +36,18 @@ const registerUser = expressAsyncHandler(async(req, res) => {
     }
 });
 
-module.exports = {registerUser};
+const authUser = async(req, res) => {
+    const {email, password} = req.body;
+    const user = await userCredentials.findOne({email});
+
+    if(user && await bcrypt.compare(password, user.password)){
+        const token = generateToken(user._id);
+        res.status(200).send({message: 'Authnetication sucessfull', token: token});
+    }else{
+        res.status(400).send({message:"Email or password incorrect. Try again!!"})
+    }
+}
+
+
+
+module.exports = {registerUser, authUser};

@@ -17,7 +17,7 @@ const Signup = () => {
         if(userName && email && password && confirmPassword){
             if(password === confirmPassword){
 
-                fetch("http://localhost:4000/createUser/signup", {
+                fetch("http://localhost:4000/user/signup", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
